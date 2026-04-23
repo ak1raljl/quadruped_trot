@@ -3,7 +3,7 @@
 </div>
 trot for go2 edu and Xiaomi cyberdog2
 
-| <div align="center"> Isaac Gym </div> | <div align="center"> Mujoco </div> |
+| <div align="center"> Go2 </div> | <div align="center"> Cyberdog2 </div> |
 |--- | --- |
 | ![Go2](go2.png)  | ![cyberdog2](cyberdog2.png) 
 </div>
