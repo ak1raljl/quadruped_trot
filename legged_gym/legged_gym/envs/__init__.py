@@ -42,6 +42,8 @@ from .go2.go2_walk_these_ways import Go2WalkTheseWays
 from .go2.go2_walk_these_ways_config import Go2WalkTheseWaysCfg, Go2WalkTheseWaysCfgPPO
 from .cyberdog2.cyberdog2_walk_these_ways import Cyberdog2WalkTheseWays
 from .cyberdog2.cyberdog2_walk_these_ways_config import Cyberdog2WalkTheseWaysCfg, Cyberdog2WalkTheseWaysCfgPPO
+from .go2.go2_simple_trot import Go2TrotRobot
+from .go2.go2_simple_trot_config import Go2TrotCfg, Go2TrotCfgPPO
 
 import os
 
@@ -54,3 +56,4 @@ task_registry.register( "a1", LeggedRobot, A1RoughCfg(), A1RoughCfgPPO() )
 task_registry.register( "cassie", Cassie, CassieRoughCfg(), CassieRoughCfgPPO() )
 task_registry.register( "go2_walk_these_ways", Go2WalkTheseWays, Go2WalkTheseWaysCfg(), Go2WalkTheseWaysCfgPPO() )
 task_registry.register( "cyberdog2_walk_these_ways", Cyberdog2WalkTheseWays, Cyberdog2WalkTheseWaysCfg(), Cyberdog2WalkTheseWaysCfgPPO() )
+task_registry.register( "go2_simple_trot", Go2TrotRobot, Go2TrotCfg(), Go2TrotCfgPPO() )

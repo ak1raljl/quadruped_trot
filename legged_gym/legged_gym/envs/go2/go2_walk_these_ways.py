@@ -236,13 +236,33 @@ class Go2WalkTheseWays( LeggedRobot ):
             device=self.device
         ).squeeze(1)
         # gait phase
-        self.commands[env_ids, 5] = 0.5
+        self.commands[env_ids, 5] = torch_rand_float(
+            self.cfg.commands.gait_phase_cmd_range[0],
+            self.cfg.commands.gait_phase_cmd_range[1],
+            (len(env_ids), 1),
+            device=self.device
+        ).squeeze(1)
         # gait offset
-        self.commands[env_ids, 6] = 0.0
+        self.commands[env_ids, 6] = torch_rand_float(
+            self.cfg.commands.gait_offset_cmd_range[0],
+            self.cfg.commands.gait_offset_cmd_range[1],
+            (len(env_ids), 1),
+            device=self.device
+        ).squeeze(1)
         # gait bound
-        self.commands[env_ids, 7] = 0.0
+        self.commands[env_ids, 7] = torch_rand_float(
+            self.cfg.commands.gait_bound_cmd_range[0],
+            self.cfg.commands.gait_bound_cmd_range[1],
+            (len(env_ids), 1),
+            device=self.device
+        ).squeeze(1)
         # gait duration
-        self.commands[env_ids, 8] = 0.5
+        self.commands[env_ids, 8] = torch_rand_float(
+            self.cfg.commands.gait_duration_cmd_range[0],
+            self.cfg.commands.gait_duration_cmd_range[1],
+            (len(env_ids), 1),
+            device=self.device
+        ).squeeze(1)
         # swing height
         self.commands[env_ids, 9] = torch_rand_float(
             self.cfg.commands.footswing_height_range[0],

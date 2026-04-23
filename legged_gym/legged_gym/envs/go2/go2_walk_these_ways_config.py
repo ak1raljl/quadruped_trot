@@ -127,7 +127,7 @@ class Go2WalkTheseWaysCfg(LeggedRobotCfg):
         gait_offset_cmd_range = [0.0, 1.0]
         gait_bound_cmd_range = [0.0, 1.0]
         gait_frequency_cmd_range = [2.0, 4.0]
-        gait_duration_cmd_range = [0.5, 0.5]
+        gait_duration_cmd_range = [0.3, 0.7]
         footswing_height_range = [0.03, 0.35]
         body_pitch_range = [-0.1, 0.1]
         body_roll_range = [-0.0, 0.0]
@@ -170,5 +170,5 @@ class Go2WalkTheseWaysCfgPPO( LeggedRobotCfgPPO ):
     class runner( LeggedRobotCfgPPO.runner ):
         run_name = ''
         experiment_name = 'go2_walk_these_ways'
-        max_iterations = 10000
-        checkpoint_interval = 1000
+        max_iterations = 100000
+        checkpoint_interval = 2000
