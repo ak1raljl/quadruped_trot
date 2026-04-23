@@ -73,7 +73,14 @@ legged_gym/logs/go2_walk_these_ways/exported/policies/policy_1.pt
 3. Run MuJoCo Sim2Sim from the repository root:
 
 ```bash
+# go2_walk_these_ways
 python sim2sim/deploy_go2.py
+
+# go2_simple_trot
+python sim2sim/deploy_go2_simple.py
+
+# cyberdog2
+python sim2sim/deploy_cyberdog2.py
 ```
 
 - Keyboard control:
@@ -81,7 +88,6 @@ python sim2sim/deploy_go2.py
   - `A / D`: left / right
   - `Q / E`: yaw left / yaw right
 
-- `go2.yaml` should stay consistent with the training config, especially `num_obs`, `action_scale`, `kps`, `kds`, `default_angles`, and joint order. If these values do not match the Isaac Gym side, MuJoCo replay will behave incorrectly.
 
 ### GO2 Sim2Real ###
 refer to my sim2real repository [go2_sim2sim_deploy](https://github.com/ak1raljl/go2_sim2sim_deploy)
