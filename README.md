@@ -3,6 +3,11 @@
 </div>
 trot for go2 edu and Xiaomi cyberdog2
 
+| <div align="center"> Isaac Gym </div> | <div align="center"> Mujoco </div> |
+|--- | --- |
+| ![Go2](go2.png)  | ![cyberdog2](cyberdog2.png) 
+</div>
+
 **reference code:** [walk-these-ways](https://github.com/Improbable-AI/walk-these-ways.git) , [walk-these-ways-go2](https://github.com/Teddy-Liao/walk-these-ways-go2.git) , [My_unitree_go2_gym](https://github.com/yusongmin1/My_unitree_go2_gym.git)
 
 **reference paper:**  [Walk These Ways: Tuning Robot Control for Generalization with Multiplicity of Behavior](https://gmargo11.github.io/walk-these-ways/)
