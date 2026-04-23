@@ -1,0 +1,4 @@
+__pycache__
+.vscode
+.claude
+sim2sim/deploy_go2.py
