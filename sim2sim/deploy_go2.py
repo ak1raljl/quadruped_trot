@@ -58,6 +58,32 @@ def get_keyboard_command(keys, cmd_limits):
     if keys[pygame.K_e]:    cmd_yaw += cmd_limits[2, 0]
     return np.array([cmd_x, cmd_y, cmd_yaw], dtype=np.float32)
 
+
+def make_gait_preset(
+    name,
+    frequency,
+    phase,
+    offset,
+    bound,
+    duration,
+    footswing_height,
+    body_height_cmd,
+    body_pitch,
+    body_roll,
+):
+    return {
+        "name": name,
+        "frequency": float(frequency),
+        "phase": float(phase),
+        "offset": float(offset),
+        "bound": float(bound),
+        "duration": float(duration),
+        "footswing_height": float(footswing_height),
+        "body_height_cmd": float(body_height_cmd),
+        "body_pitch": float(body_pitch),
+        "body_roll": float(body_roll),
+    }
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--save-video", action="store_true", help="Whether to save video of the simulation.")
@@ -68,7 +94,7 @@ if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((200, 100))
     pygame.display.set_caption("Keyboard Control")
-    print("Keyboard control: W/S=vx, A/D=vy, Q/E=yaw")
+    print("Keyboard control: W/S=vx, A/D=vy, Q/E=yaw, 1=trot, 2=pace, 3=bound, 4=pronk")
 
     with open(f"sim2sim/configs/{config_file}", "r") as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
@@ -112,6 +138,58 @@ if __name__ == "__main__":
         body_pitch = config.get("body_pitch", 0.0)
         body_roll = config.get("body_roll", 0.0)
         control_dt = simulation_dt * control_decimation
+
+        gait_presets = {
+            pygame.K_1: make_gait_preset(
+                "trot",
+                gait_frequency,
+                0.5,
+                0.0,
+                0.0,
+                gait_duration,
+                footswing_height,
+                body_height_cmd,
+                body_pitch,
+                body_roll,
+            ),
+            pygame.K_2: make_gait_preset(
+                "pace",
+                gait_frequency,
+                0.0,
+                0.0,
+                0.5,
+                gait_duration,
+                footswing_height,
+                body_height_cmd,
+                body_pitch,
+                body_roll,
+            ),
+            pygame.K_3: make_gait_preset(
+                "bound",
+                gait_frequency,
+                0.0,
+                0.5,
+                0.0,
+                gait_duration,
+                footswing_height,
+                body_height_cmd,
+                body_pitch,
+                body_roll,
+            ),
+            pygame.K_4: make_gait_preset(
+                "pronk",
+                gait_frequency,
+                0.0,
+                0.0,
+                0.0,
+                gait_duration,
+                footswing_height,
+                body_height_cmd,
+                body_pitch,
+                body_roll,
+            ),
+        }
+        active_gait = gait_presets[pygame.K_1]
 
         idx_model2mj = idx_mj2model = list(range(num_actions))
         if 'mujoco_joint_names' in config and 'model_joint_names' in config:
@@ -179,10 +257,20 @@ if __name__ == "__main__":
             step_start = time.time()
 
             if counter % control_decimation == 0:
-                pygame.event.pump()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        viewer.close()
+                    elif event.type == pygame.KEYDOWN and event.key in gait_presets:
+                        active_gait = gait_presets[event.key]
+                        gait_index = 0.0
+                        clock_inputs.fill(0.0)
+                        print(f"\nSwitched gait to {active_gait['name']}")
                 keys = pygame.key.get_pressed()
                 cmd = get_keyboard_command(keys, cmd_limits)
-                show_str += f"Cmd: Vx={cmd[0]:.2f}, Vy={cmd[1]:.2f}, Wz={cmd[2]:.2f}"
+                show_str += (
+                    f"Cmd: Vx={cmd[0]:.2f}, Vy={cmd[1]:.2f}, Wz={cmd[2]:.2f}, "
+                    f"Gait={active_gait['name']}"
+                )
                 print(show_str, end='\r')
 
             tau = pd_control(target_dof_pos, d.qpos[7:], kps, np.zeros_like(kds), d.qvel[6:], kds)
@@ -218,25 +306,25 @@ if __name__ == "__main__":
                 # 12-dim command: [vx, vy, yaw, body_height, freq, phase, offset, bound, duration, footswing, pitch, roll]
                 full_cmd = np.array([
                     cmd[0], cmd[1], cmd[2],
-                    body_height_cmd, gait_frequency,
-                    gait_phase, gait_offset, gait_bound, gait_duration,
-                    footswing_height, body_pitch, body_roll
+                    active_gait["body_height_cmd"], active_gait["frequency"],
+                    active_gait["phase"], active_gait["offset"], active_gait["bound"], active_gait["duration"],
+                    active_gait["footswing_height"], active_gait["body_pitch"], active_gait["body_roll"]
                 ], dtype=np.float32)
 
                 # step gait_index and clock_inputs
-                gait_index = (gait_index + control_dt * gait_frequency) % 1.0
+                gait_index = (gait_index + control_dt * active_gait["frequency"]) % 1.0
                 foot_phases = [
-                    gait_index + gait_phase + gait_offset + gait_bound,
-                    gait_index + gait_offset,
-                    gait_index + gait_bound,
-                    gait_index + gait_phase
+                    gait_index + active_gait["phase"] + active_gait["offset"] + active_gait["bound"],
+                    gait_index + active_gait["offset"],
+                    gait_index + active_gait["bound"],
+                    gait_index + active_gait["phase"]
                 ]
                 for i in range(4):
                     fp = foot_phases[i] % 1.0
-                    if fp < gait_duration:
-                        fp = fp * (0.5 / gait_duration)
+                    if fp < active_gait["duration"]:
+                        fp = fp * (0.5 / active_gait["duration"])
                     else:
-                        fp = 0.5 + (fp - gait_duration) * (0.5 / (1.0 - gait_duration))
+                        fp = 0.5 + (fp - active_gait["duration"]) * (0.5 / (1.0 - active_gait["duration"]))
                     clock_inputs[i] = np.sin(2 * np.pi * fp)
 
                 obs[:3] = ang_vel * ang_vel_scale

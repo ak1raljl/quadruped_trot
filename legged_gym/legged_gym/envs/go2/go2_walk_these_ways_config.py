@@ -2,7 +2,7 @@ from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg, LeggedRobot
 
 class Go2WalkTheseWaysCfg(LeggedRobotCfg):
     class env( LeggedRobotCfg.env ):
-        num_envs = 4096
+        num_envs = 8192
         num_observations = 59
         num_privileged_obs = 90
         num_actions = 12
@@ -66,7 +66,7 @@ class Go2WalkTheseWaysCfg(LeggedRobotCfg):
     class rewards( LeggedRobotCfg.rewards ):
         use_terminal_body_height = True
         soft_dof_pos_limit = 0.9
-        base_height_target = 0.34
+        base_height_target = 0.36
         kappa_gait_probs = 0.07
         terminal_body_height = 0.05
         class scales( LeggedRobotCfg.rewards.scales ):
@@ -85,10 +85,9 @@ class Go2WalkTheseWaysCfg(LeggedRobotCfg):
             # raibert_heuristic = -5.0
             dof_vel = -1e-4
             dof_pos = -0.0
-            feet_impact_vel = -0.0
+            feet_impact_vel = -1.0
             feet_clearance = -0.0
-            feet_clearance_cmd = -0.0
-            feet_contact_forces = 0.0
+            feet_contact_forces = -1.0
             action_rate = -0.01
             stand_still = -1.0
             default_hip_pos = -2.0

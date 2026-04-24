@@ -677,7 +677,7 @@ class Go2WalkTheseWays( LeggedRobot ):
                 >鼓励零速着地或向上缓冲
         '''
         # calculate vertical foot velocities at previous step
-        prev_foot_velocities = self.prev_foot_velocities[:, :, 2].view(self.env.num_envs, -1)
+        prev_foot_velocities = self.prev_foot_velocities[:, :, 2].view(self.num_envs, -1)
         # measure if feet are in contact
         contact_states = torch.norm(self.contact_forces[:, self.feet_indices, :], dim=-1) > 1.0
         # penalize high downward velocities when in contact

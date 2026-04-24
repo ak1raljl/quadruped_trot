@@ -1,0 +1,6 @@
+Fri Apr 24 12:03:11 2026
+WARNING: Nan, Inf or huge value in CTRL at ACTUATOR 1. The simulation is unstable. Time = 0.4000.
+
+Fri Apr 24 12:03:11 2026
+WARNING: Nan, Inf or huge value in CTRL at ACTUATOR 0. The simulation is unstable. Time = 0.0000.
+
